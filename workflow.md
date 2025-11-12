@@ -165,7 +165,7 @@ jobs:
 
 Las variables de entorno en GitHub Actions son pares clave-valor que almacenan información accesible durante la ejecución de un flujo de trabajo. Se pueden definir a nivel global, por trabajo o por paso, y se utilizan para configurar comportamientos, almacenar secretos o compartir datos entre diferentes partes del flujo de trabajo.
 
-````yaml
+```yaml
 #variable global level
 env:
   GLOBAL_VAR: 'valor_global'
@@ -186,5 +186,40 @@ jobs:
             echo "Global Variable: $GLOBAL_VAR"
             echo "Job Variable: $JOB_VAR"
             echo "Step Variable: $STEP_VAR"
-    ```
-````
+```
+
+## Matrix
+
+La estrategia matrix en GitHub Actions permite ejecutar un mismo trabajo múltiples veces con diferentes configuraciones, como distintos sistemas operativos, versiones de lenguajes o entornos. Esto se logra definiendo una matriz de variables en el flujo de trabajo, lo que genera automáticamente un trabajo para cada combinación posible de estas variables.
+
+```yaml
+name: CI - Matrix example
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [14, 16]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install dependencies
+        run: npm ci 
+
+      - name: Run tests
+        run: npm test
+```
