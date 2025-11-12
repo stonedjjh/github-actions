@@ -1,0 +1,28 @@
+name: CI Pipeline
+
+jobs:
+  hola:
+    runs-on: ububtu-latest
+
+    steps:
+      - name: Hola mundo
+        run: echo "Hello, World!"
+
+      - name: touch file
+        run: touch hola.txt
+
+      - name: Set text
+        run: echo "Hola Mundo" >> hola.txt
+
+      - name: Read file
+        run: cat hola.txt
+
+      - name: Adiós mundo
+        run: echo "Goodbye, World!"
+
+      # Using custom action
+      - name: Run my custom action
+        uses: ./.github/actions/my-action
+        # Passing input to the custom action
+        with:
+          message: "Hola desde la acción personalizada"

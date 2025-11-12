@@ -1,0 +1,16 @@
+name: "My action"
+description: "Test my action"
+
+inputs:
+  message:
+    description: "Hola mundo"
+    required: true
+    default: "Hello, World!"
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: "Print greeting"
+      run: echo "Hello from my custom action! ${{inputs.message}}"
+      shell: bash
