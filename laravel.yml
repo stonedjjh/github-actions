@@ -1,0 +1,53 @@
+name: Laravel CI/CD Pipeline
+
+  on:[push]
+
+jobs:
+  Laravel-CI-CD:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: example
+          MYSQL_DATABASE: laravel_test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, bcmath, pdo, pdo_mysql
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+      - name: Copy .env file
+        run: cp .env.example .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Run Tests
+        id: test
+        run: php artisan test
+        #alternativamente podemos usar: run: ./vendor/bin/phpunit
+
+      - name: Artifacts
+        if: steps.test.outcome == 'failure'
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-logs
+          path: storage/logs/laravel.log
+
+      - name: Run Deploy
+        #if the tests pass, then deploy
+        if: steps.test.outcome == 'success'
+        run: echo "Deploying application..."
+        # Aquí puedes agregar los comandos necesarios para desplegar tu aplicación

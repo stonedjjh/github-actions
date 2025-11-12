@@ -1,0 +1,21 @@
+name: SSH Use Example
+
+on: [push]
+
+jobs:
+  local-action:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ls
+
+        # Add SSH key from secrets to use SSH
+        # Make sure to add your SSH_PRIVATE_KEY in the repository secrets
+        # Add GitHub to known hosts to avoid prompt
+        run: |
+          mkdir -p ~/.ssh
+          echo ${{
+            secrets.SSH_PRIVATE_KEY
+          }} >> ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa          
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
