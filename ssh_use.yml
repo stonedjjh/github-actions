@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ls
+      - name: setup SSH
 
         # Add SSH key from secrets to use SSH
         # Make sure to add your SSH_PRIVATE_KEY in the repository secrets
@@ -18,4 +18,23 @@ jobs:
             secrets.SSH_PRIVATE_KEY
           }} >> ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa          
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts    
+    
+      - name: Ls ssh
+        run: ssh usuario@servidor 'ls -la'
+
+      - name: executing remote ssh command using password
+        uses: appleboy/ssh-action@v1.0.3
+        if: success()
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            whoami
+            cd /var/www/html
+            git pull origin main
+
+
+
