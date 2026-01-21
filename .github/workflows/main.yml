@@ -18,7 +18,7 @@ jobs:
 
       - name: Ejecutar Pruebas (Test)
         run: |
-          ./app.sh
+          ./Nodo/app.sh
           echo "Prueba de funcionamiento exitosa."
       # Si el script fallara, el proceso se detendría aquí
 
