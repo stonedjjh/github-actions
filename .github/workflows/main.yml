@@ -1,32 +1,28 @@
 name: Pipeline CI/CD Completo
 
 on: 
-  push: # El evento: Se activa cada vez que subes código
+  push:
 
 jobs:
   fabrica-de-software:
-    runs-on: ubuntu-latest # El runner: Usamos una máquina Linux gratuita
+    runs-on: ubuntu-latest
 
     steps:
-      # --- FASE 1: PREPARACIÓN ---
       - name: Descargar código
-        uses: actions/checkout@v4 # Actualizado a v4 (versión más reciente y estable)
+        uses: actions/checkout@v4
 
       # --- FASE 2: INTEGRACIÓN CONTINUA (CI) ---
-      - name: Dar permisos de ejecución
-        run: chmod +x app.sh # Comando Linux para hacer el script ejecutable
-
       - name: Ejecutar Pruebas (Test)
-        working-directory: ./Nodo
+        working-directory: ./Nodo  # <--- Esto cambia el terminal a esa carpeta
         run: |
+          chmod +x app.sh
           ./app.sh
           echo "Prueba de funcionamiento exitosa."
-      # Si el script fallara, el proceso se detendría aquí
 
       # --- FASE 3: DESPLIEGUE CONTINUO (CD) ---
       - name: Despliegue Simulado a Producción
         env:
-          MY_KEY: ${{ secrets.SERVER_KEY }} # Inyectamos el secreto de forma segura
+          MY_KEY: ${{ secrets.SERVER_KEY }}
         run: |
           echo "Conectando al servidor remoto..."
           echo "Usando credencial segura: $MY_KEY" 
