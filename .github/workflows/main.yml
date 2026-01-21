@@ -17,8 +17,9 @@ jobs:
         run: chmod +x app.sh # Comando Linux para hacer el script ejecutable
 
       - name: Ejecutar Pruebas (Test)
+        working-directory: ./Nodo
         run: |
-          ./Nodo/app.sh
+          ./app.sh
           echo "Prueba de funcionamiento exitosa."
       # Si el script fallara, el proceso se detendría aquí
 
